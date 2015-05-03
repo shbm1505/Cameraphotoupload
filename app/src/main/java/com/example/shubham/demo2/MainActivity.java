@@ -16,6 +16,7 @@ package com.example.shubham.demo2;
         import android.os.Environment;
         import android.provider.MediaStore;
         import android.support.v7.app.ActionBarActivity;
+        import android.util.Config;
         import android.util.Log;
         import android.view.View;
         import android.widget.Button;
@@ -29,12 +30,10 @@ public class MainActivity extends ActionBarActivity {
 
     // Camera activity request codes
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
 
     public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
     private Uri fileUri; // file url to store image/video
-
+    private static String fileName;
     private Button btnCapturePicture, btnRecordVideo;
 
     @Override
@@ -165,6 +164,7 @@ public class MainActivity extends ActionBarActivity {
     private void launchUploadActivity(boolean isImage){
         Intent i = new Intent(MainActivity.this, UploadActivity.class);
         i.putExtra("filePath", fileUri.getPath());
+        i.putExtra("fileName", fileName );
         i.putExtra("isImage", isImage);
         startActivity(i);
     }
@@ -189,13 +189,13 @@ public class MainActivity extends ActionBarActivity {
         File mediaStorageDir = new File(
                 Environment
                         .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                Config.IMAGE_DIRECTORY_NAME);
+                "upload");
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 Log.d(TAG, "Oops! Failed create "
-                        + Config.IMAGE_DIRECTORY_NAME + " directory");
+                        + "upload" + " directory");
                 return null;
             }
         }
@@ -211,6 +211,7 @@ public class MainActivity extends ActionBarActivity {
             return null;
         }
 
+        fileName="IMG_"+timeStamp+".jpg";
         return mediaFile;
     }
 }
